@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+          xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+          xmlns:pv="http://schemas.microsoft.com/office/customui/1.0"
+          xsi:type="TaskPaneApp">
+  <!-- 此為 Office Web 增益集 Manifest 檔案，定義按鈕與背後綁定的 HTML -->
+  <Id>b5a27891-9c6f-4099-a3d8-e7d66be87e6b</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>My Company</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="LaTeX to SVG"/>
+  <Description DefaultValue="LaTeX to SVG Add-in."/>
+  <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png"/>
+  <SupportUrl DefaultValue="https://localhost:3000/support"/>
+  <AppDomains>
+    <AppDomain>https://localhost:3000</AppDomain>
+  </AppDomains>
+  
+  <Hosts>
+    <Host Name="Presentation"/>
+  </Hosts>
+  
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="ImageCoercion"/>
+    </Sets>
+  </Requirements>
+  
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://localhost:3000/commands.html"/>
+  </DefaultSettings>
+  
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Presentation">
+        <DesktopFormFactor>
+          <!-- 指向背景執行的 HTML -->
+          <FunctionFile resid="Commands.Url"/>
+          
+          <!-- 在 PowerPoint 面板 (Ribbon) 增加自訂選單與按鈕 -->
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <!-- 修改為直接出現在 [常用] (Home) 標籤中，避免自訂標籤出不來的問題 -->
+            <OfficeTab id="TabHome">
+              <Group id="CommandsGroup">
+                <Label resid="GroupLabel"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+                
+                <!-- 背景執行之按鈕 (無介面) -->
+                <Control xsi:type="Button" id="ConvertLatexBtn">
+                  <Label resid="ButtonLabel"/>
+                  <Supertip>
+                    <Title resid="ButtonLabel"/>
+                    <Description resid="ButtonTooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <!-- 對應 commands.js 中 Office.actions.associate 註冊的函數名 -->
+                    <FunctionName>convertLatexToSvg</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <!-- 定義全域字串資源與圖示位置 -->
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="Math Tools"/>
+        <bt:String id="ButtonLabel" DefaultValue="Convert to LaTeX"/>
+        <bt:String id="TabLabel" DefaultValue="LaTeX to SVG"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="ButtonTooltip" DefaultValue="Highlight LaTeX text and convert it to SVG image."/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>
