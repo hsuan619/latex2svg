@@ -26,51 +26,45 @@ async function convertLatexToSvg(event) {
   try {
     Office.context.document.getSelectedDataAsync(Office.CoercionType.Text, function (asyncResult) {
       if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-        console.error("無法讀取選取文字:", asyncResult.error.message);
+        Office.context.document.setSelectedDataAsync("[讀取文字失敗: " + asyncResult.error.message + "]", {coercionType: Office.CoercionType.Text});
         event.completed();
         return;
       }
       
       const latexText = asyncResult.value;
       if (!latexText || latexText.trim() === '') {
-        console.warn("未選取任何文字");
-        event.completed(); // 必須呼叫 completed，否則 PowerPoint 會卡住該命令
+        Office.context.document.setSelectedDataAsync("[請先用滑鼠『反白選取』一段文字哦！]", {coercionType: Office.CoercionType.Text});
+        event.completed();
         return;
       }
 
       try {
-        // 利用 MathJax 進行轉換，取得包裹層 <mjx-container>
         const node = html.convert(latexText, { display: true });
-        
-        // 取得內部的 <svg> 元素並將它轉為字串
         const svgNode = adaptor.firstChild(node);
         const svgString = adaptor.outerHTML(svgNode);
         
-        // 將 SVG 轉譯為 PNG 圖片格式的 Base64
         svgToPngBase64(svgString).then(pngBase64 => {
-          // 去除 dataURI 前綴，因為 CoercionType.Image 只接受純 Base64 內容
           const cleanBase64 = pngBase64.replace(/^data:image\/(png|jpeg);base64,/, "");
 
-          // 插入圖片來替換目前選取的內容
           Office.context.document.setSelectedDataAsync(cleanBase64, {
             coercionType: Office.CoercionType.Image
           }, function (setResult) {
             if (setResult.status === Office.AsyncResultStatus.Failed) {
-              console.error("圖片插入失敗:", setResult.error.message);
+              Office.context.document.setSelectedDataAsync("[圖片插入失敗: " + setResult.error.message + "]", {coercionType: Office.CoercionType.Text});
             }
             event.completed();
           });
         }).catch(err => {
-          console.error("SVG 轉 PNG 失敗:", err);
+          Office.context.document.setSelectedDataAsync("[SVG轉圖片失敗!]", {coercionType: Office.CoercionType.Text});
           event.completed();
         });
       } catch (mathErr) {
-        console.error("MathJax 轉換失敗:", mathErr);
+        Office.context.document.setSelectedDataAsync("[MathJax語法錯誤!]", {coercionType: Office.CoercionType.Text});
         event.completed();
       }
     });
   } catch (err) {
-    console.error("執行過程中發生錯誤:", err);
+    Office.context.document.setSelectedDataAsync("[未知致命錯誤!]", {coercionType: Office.CoercionType.Text});
     event.completed();
   }
 }
