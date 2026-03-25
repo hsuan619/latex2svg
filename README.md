@@ -1,6 +1,7 @@
 # PowerPoint LaTeX to SVG 增益集 (UI-Less)
 
 這是一個無介面（背景執行）、專為 PowerPoint 設計的 Office Web Add-in。使用者只需在投影片中反白選取 LaTeX 語法（例如 `$E=mc^2$` 或 `\frac{1}{2}mv^2`），點擊上方面板 **[常用]** 裡的轉換按鈕，系統就會在背景使用 MathJax 將其轉換為高畫質公式圖片，並替換原本的文字！
+
 <img width="365" height="155" alt="image" src="https://github.com/user-attachments/assets/6bf4b83b-122a-4053-a079-1b8bbc243968" />
 <img width="563" height="192" alt="image" src="https://github.com/user-attachments/assets/c0aa32d2-d897-4310-9e05-a7093cd87f47" />
 
