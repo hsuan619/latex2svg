@@ -19,7 +19,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        commands: resolve(__dirname, 'commands.html')
+        commands: resolve(__dirname, 'commands.html'),
+        index: resolve(__dirname, 'index.html')
       }
     }
   }
