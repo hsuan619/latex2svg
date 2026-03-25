@@ -8,6 +8,7 @@ const __dirname = dirname(__filename);
 
 // 使用官方開發者憑證啟動 HTTPS
 export default defineConfig({
+  base: '/latex2svg/',
   server: {
     port: 3000,
     https: {
